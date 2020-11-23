@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "444237883659",
+    "firebase_url": "https://smartparking-d4c58.firebaseio.com",
+    "project_id": "smartparking-d4c58",
+    "storage_bucket": "smartparking-d4c58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444237883659:android:5425fcc73896e8782dda0e",
+        "android_client_info": {
+          "package_name": "com.smartparcking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444237883659-amtcfhp6gfp3e0rnka62v3i9givr4nu0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartparcking",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "444237883659-on8rr16lqkh76rfs0bsfv2kvu5kbp4t2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBncCR8pfFx_Y2_UQ7toigDRKkfHC_5wmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444237883659-p80nghvb53jbet3bsr8jsggg60hnodug.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "444237883659-9v8una9sfhh44jic9es9g2rbb0d6t673.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.smartParcking2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
