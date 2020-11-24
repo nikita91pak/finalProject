@@ -39,3 +39,11 @@ export const getHandle = async () => new Promise(async (resolve) => {
   const response = await instance.get('/holon.json')
   resolve(response.data)
 });
+
+
+export const putHandle = (path, body) => new Promise(async (resolve) => {
+    await instance.put(path, body)
+  
+})
+
+export const findIndex = (arr, propety, value) => arr.findIndex(item => item[propety] === value)
