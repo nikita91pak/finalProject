@@ -16,13 +16,14 @@ import CardWrapper from '../components/UI/Card/CardWrapper';
 import TitleWithBackground from '../components/UI/TitleWithBackground/TitleWithBackground';
 import {COLORS} from '../conts/consts';
 import {OS} from '../utilitys/utilitys';
-
+import Modal from '../components/UI/Modal/Modal';
 export default () => {
   const [currnetParking, setCurrnetParking] = useState('holon');
   const [currnetSlot, setCurrnetSlot] = useState({}); // fetch parking from firebase database
   const [parking, setParking] = useState({}); // parking object
   const [isLoading, setIsLoading] = useState(false); // show indecator loading...
   const [isReserve, setIsReserve] = useState(false); // if user select slot of parcking
+  const [modalVisible, setModalVisible] = useState(false);
   const styleBtn = useRef(OS === 'android' ? COLORS.blue : COLORS.white)
     .current;
   const getdata = useCallback(async () => {
@@ -40,26 +41,39 @@ export default () => {
     setCurrnetSlot({...item, isFree: false});
     setIsReserve(true);
   };
-  const canchelOrder = () => {
-    //await putHandle
-    setCurrnetSlot({});
-    setIsReserve(false);
-  };
-  const submitOrder =  async () => {
-    const index = findIndex(parking.parkings, 'name', currnetSlot.name) //parking.parkings.findIndex(item => item.name === currnetSlot.name)
-    if(index > -1 ){
-      const response = await putHandle(`/holon/parkings/${index}.json`, JSON.stringify(currnetSlot))
-      console.log('response',response)
+  const canchelOrder = async () => {
+    const index = findIndex(parking.parkings, 'name', currnetSlot.name); //this logic for find index slot for update data in data base
+    if (index > -1) {
+      const response = await putHandle(
+        `/holon/parkings/${index}.json`,
+        JSON.stringify({...currnetSlot, isFree: true}),
+      );
+      setCurrnetSlot({});
+      setIsReserve(false);
+      setModalVisible(false)
     }
-      
-     
   };
-
+  const submitOrder = async () => {
+    const index = findIndex(parking.parkings, 'name', currnetSlot.name); //this logic for find index slot for update data in data base
+    if (index > -1) {
+      const response = await putHandle(
+        `/holon/parkings/${index}.json`,
+        JSON.stringify(currnetSlot),
+      );
+      console.log('response', response);
+    }
+  };
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
   const renderItem = ({item}) => (
     <Card
       item={{...item}}
       isReserve={isReserve}
-      canchelOrder={canchelOrder}
+      canchelOrder={handleOpenModal}
       handleReserve={handleReserve}
       isSelected={currnetSlot.name === item.name}
     />
@@ -112,6 +126,11 @@ export default () => {
           </CardWrapper>
         </View>
       </View>
+      <Modal
+        canchelOrder={canchelOrder}
+        handleCloseModal={handleCloseModal}
+        modalVisible={modalVisible}
+      />
     </View>
   );
 };

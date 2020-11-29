@@ -55,12 +55,13 @@ const styles = StyleSheet.create({
     margin: 5,
     alignContent: 'center',
     padding: 10,
-    shadowColor: COLORS.black,
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 0,
+      height: 2
     },
-    shadowRadius: 5,
-    borderRadius: 5,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 1
   },
 });

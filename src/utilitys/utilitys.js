@@ -42,7 +42,8 @@ export const getHandle = async () => new Promise(async (resolve) => {
 
 
 export const putHandle = (path, body) => new Promise(async (resolve) => {
-    await instance.put(path, body)
+    const response = await instance.put(path, body)
+    resolve(response.data)
   
 })
 

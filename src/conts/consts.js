@@ -16,7 +16,8 @@ export const COLORS = {
     lightGray: '#95a5a6',
     red: '#c0392b',
     black: '#2c3e50',
-    lynxWhite: '#dcdde1'
+    lynxWhite: '#dcdde1',
+    electromagnetic: 'rgba(47, 54, 64, .5)'
 }
 //global text fonts
 export const FONTS = {
