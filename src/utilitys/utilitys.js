@@ -43,7 +43,7 @@ export const getHandle = async () => new Promise(async (resolve) => {
   resolve(response.data)
 });
 
-// Handle to method PUT - for update data from data base firebase
+// Handle to method PUT - for update the a data base in firebase
 export const putHandle = (path, body) => new Promise(async (resolve) => {
     const response = await instance.put(path, body)
     resolve(response.data)
