@@ -3,6 +3,9 @@ import {StyleSheet, View} from 'react-native';
 import TextRegular from '../Text/TextRegular';
 import {COLORS} from '../../../conts/consts';
 import TransparetBtn from '../Buttons/TransparetBtn';
+
+
+//global card component
 const Card = ({item, isReserve, handleReserve, isSelected, canchelOrder}) => {
   const renderButton = () => {
     if (isSelected) {

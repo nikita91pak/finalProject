@@ -1,12 +1,14 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {COLORS} from '../../../conts/consts';
+
+//global CardWrapper component
 const CardWrapper = ({children}) => {
   return <View style={styles.container}>{children}</View>;
 };
 
 export default CardWrapper;
-
+//styles for component
 const styles = StyleSheet.create({
   container: {
     flex: 1,

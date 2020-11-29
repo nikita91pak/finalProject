@@ -8,11 +8,9 @@ import {
   View,
 } from 'react-native';
 import { COLORS } from '../../../conts/consts'
+//global Modal component
 export default ({canchelOrder, modalVisible,  handleCloseModal}) => {
-  
 
-  
-  
   return (
     <View style={{...styles.centeredView, flex: modalVisible ? 1 : 0}}>
       <Modal
@@ -45,7 +43,7 @@ export default ({canchelOrder, modalVisible,  handleCloseModal}) => {
     </View>
   );
 };
-
+//style component
 const styles = StyleSheet.create({
   centeredView: {
     flex:1,
