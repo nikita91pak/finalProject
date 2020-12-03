@@ -17,6 +17,8 @@ import TitleWithBackground from '../components/UI/TitleWithBackground/TitleWithB
 import {COLORS} from '../conts/consts';
 import {OS} from '../utilitys/utilitys';
 import Modal from '../components/UI/Modal/Modal';
+import QR from '../components/QR/QR';
+
 export default () => {
   const [currnetParking, setCurrnetParking] = useState('holon');
   const [currnetSlot, setCurrnetSlot] = useState({}); // fetch parking from firebase database
@@ -26,6 +28,7 @@ export default () => {
   const [modalVisible, setModalVisible] = useState(false);
   const styleBtn = useRef(OS === 'android' ? COLORS.blue : COLORS.white)
     .current;
+  const [isSubmited, setIsSubmited] = useState(false);
   const getdata = useCallback(async () => {
     setIsLoading(true);
     const response = await getHandle();
@@ -43,14 +46,48 @@ export default () => {
   };
   const canchelOrder = async () => {
     const index = findIndex(parking.parkings, 'name', currnetSlot.name); //this logic for find index slot for update data in data base
-    if (index > -1) {
+    if (index > -1 || isSubmited) {
       const response = await putHandle(
         `/holon/parkings/${index}.json`,
         JSON.stringify({...currnetSlot, isFree: true}),
       );
       setCurrnetSlot({});
       setIsReserve(false);
-      setModalVisible(false)
+      setModalVisible(false);
+      setIsSubmited(false);
+    } else {
+      setIsSubmited(false);
+      setCurrnetSlot({});
+      setIsReserve(false);
+    }
+  };
+
+  const renderPayment = () => {
+    if (isSubmited) {
+      return <QR data={currnetSlot} />;
+    } else {
+      return (
+        <>
+          <View>
+            <TextRegular fontSize={30} color={COLORS.black}>
+              Price {parking.price} nis for day.
+            </TextRegular>
+          </View>
+          <View
+            style={{
+              backgroundColor: isReserve ? COLORS.blue : COLORS.gray,
+              opacity: isReserve ? 1 : 0.6,
+              borderRadius: 5,
+            }}>
+            <Button
+              title="PAY"
+              color={isReserve ? styleBtn : COLORS.lightGray}
+              disabled={!isReserve}
+              onPress={submitOrder}
+            />
+          </View>
+        </>
+      );
     }
   };
   const submitOrder = async () => {
@@ -60,11 +97,17 @@ export default () => {
         `/holon/parkings/${index}.json`,
         JSON.stringify(currnetSlot),
       );
-      console.log('response', response);
+      setIsSubmited(true);
     }
   };
   const handleOpenModal = () => {
-    setModalVisible(true);
+    if (isSubmited) {
+      setModalVisible(true);
+    } else {
+      setCurrnetSlot({});
+      setIsReserve(false);
+      setModalVisible(false);
+    }
   };
   const handleCloseModal = () => {
     setModalVisible(false);
@@ -105,24 +148,7 @@ export default () => {
         <TitleWithBackground>Payments</TitleWithBackground>
         <View style={styles.payment}>
           <CardWrapper>
-            <View>
-              <TextRegular fontSize={30} color={COLORS.black}>
-                Price {parking.price} nis for day.
-              </TextRegular>
-            </View>
-            <View
-              style={{
-                backgroundColor: isReserve ? COLORS.blue : COLORS.gray,
-                opacity: isReserve ? 1 : 0.6,
-                borderRadius: 5,
-              }}>
-              <Button
-                title="PAY"
-                color={isReserve ? styleBtn : COLORS.lightGray}
-                disabled={!isReserve}
-                onPress={submitOrder}
-              />
-            </View>
+          {renderPayment()}
           </CardWrapper>
         </View>
       </View>
