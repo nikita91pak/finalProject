@@ -2,6 +2,7 @@ import React from 'react';
 import QRCode from 'react-native-qrcode-generator';
 
 import {StyleSheet, View} from 'react-native';
+import { COLORS } from '../../conts/consts';
 
 const QR = ({data}) => {
 
@@ -9,8 +10,8 @@ const QR = ({data}) => {
     <View style={styles.container}>
       <QRCode
         value={data}
-        size={200}
-        bgColor="black"
+        size={140}
+        bgColor={COLORS.blue}
         fgColor="white"
       />
     </View>
