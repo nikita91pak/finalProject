@@ -28,7 +28,7 @@ import {
 
 const App: () => React$Node = () => (
   <View style={styles.conatiner}>
-      <HomeScreen />
+      <Map />
   </View>
 );
 
