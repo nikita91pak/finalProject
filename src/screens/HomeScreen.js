@@ -19,7 +19,7 @@ import {OS} from '../utilitys/utilitys';
 import Modal from '../components/UI/Modal/Modal';
 import QR from '../components/QR/QR';
 
-export default () => {
+export default HomeScreen = (props) => {
   const [currnetParking, setCurrnetParking] = useState('holon');
   const [currnetSlot, setCurrnetSlot] = useState({}); // fetch parking from firebase database
   const [parking, setParking] = useState({}); // parking object
@@ -164,6 +164,7 @@ export default () => {
 const styles = StyleSheet.create({
   contianer: {
     flex: 1,
+    backgroundColor: 'white'
   },
   parkingList: {
     flex: 0.15,

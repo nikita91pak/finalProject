@@ -4,7 +4,7 @@ import { signout } from '../utilitys/utilitys'
 import TextBold from '../components/UI/Text/TextBold'
 import SingGroupBtn from '../components/SigninGroupBtn/SingGroupBtn'
 import { dfltUsrImgUrl, dfltUsrname } from '../conts/consts'
-const Signin = () => {
+export default SignIn = (props) => {
   const [user, setUser] = useState({});
 
   const userInfoHandler = (response, signWith) => {
@@ -53,19 +53,22 @@ const cleanUserInfo = () => {
            <SingGroupBtn
            handleSignout={handleSignout} 
            userInfoHandler={userInfoHandler} 
-           isSingin={user.id ? true : false} />
+           isSingin={user.id ? true : false}
+           userInfo={user}
+           />
+           
       </View>
     </View>
   );
 };
 
-export default Signin;
-
 const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 10,
-      paddingVertical: 8
+      paddingVertical: 8,
+      backgroundColor: 'white'
+    
     },
     imageContainer: {
         flex: .5,

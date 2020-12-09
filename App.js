@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler'
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -15,9 +16,7 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
-import Signin from './src/screens/Signin';
-import Map from './src/screens/Map'
-import HomeScreen from './src/screens/HomeScreen'
+import MainRoot from './src/routing/MainRoot'
 import {
   Header,
   LearnMoreLinks,
@@ -28,7 +27,7 @@ import {
 
 const App: () => React$Node = () => (
   <View style={styles.conatiner}>
-      <Map />
+      <MainRoot />
   </View>
 );
 

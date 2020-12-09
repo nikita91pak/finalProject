@@ -5,13 +5,18 @@ import FacebookSDK from '../FacebookSDK/FacebookSDK'
 import BlueBtn from '../UI/Buttons/BlueBtn'
 import GrayBtn from '../UI/Buttons/GrayButton'
 import { NOOP } from '../../utilitys/utilitys'
-const SingGroupBtn = ({isSingin, userInfoHandler, handleSignout}) => {
+import { useNavigation } from '@react-navigation/native';
 
+const SingGroupBtn = ({isSingin, userInfoHandler, handleSignout, userInfo={}}) => {
+    const navigation = useNavigation();
+    const navigate = () => {
+        navigation.navigate('Home')
+    }
     const isUserSing = () => {
         if(isSingin)
         return (
         <React.Fragment>
-            <BlueBtn onPress={NOOP} text='Lets Start'/>
+            <BlueBtn onPress={navigate} text='Lets Start'/>
             <GrayBtn onPress={handleSignout} text='Logout'/>
         </React.Fragment>
         )
