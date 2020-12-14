@@ -10,7 +10,14 @@ import {
 import SelectParking from '../components/SelectParking/SelectParking';
 import TextBold from '../components/UI/Text/TextBold';
 import TextRegular from '../components/UI/Text/TextRegular';
-import {getHandle, putHandle, findIndex} from '../utilitys/utilitys';
+import {
+  getHandle,
+  putHandle,
+  postHandle,
+  deleteHandle,
+  findIndex,
+  handleExistOrders
+} from '../utilitys/utilitys';
 import Card from '../components/UI/Card/Card';
 import CardWrapper from '../components/UI/Card/CardWrapper';
 import TitleWithBackground from '../components/UI/TitleWithBackground/TitleWithBackground';
@@ -26,15 +33,27 @@ export default HomeScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false); // show indecator loading...
   const [isReserve, setIsReserve] = useState(false); // if user select slot of parcking
   const [modalVisible, setModalVisible] = useState(false);
+  const [order, setOrder] = useState({})
   const styleBtn = useRef(OS === 'android' ? COLORS.blue : COLORS.white)
     .current;
   const [isSubmited, setIsSubmited] = useState(false);
+
   const getdata = useCallback(async () => {
     setIsLoading(true);
-    const response = await getHandle();
-    setIsLoading(false);
+    const response = await getHandle('/holon.json');
+    handleExistOrders(props.params.id)
+    .then(response =>{ 
+      console.log('response resolve',response);
+      setOrder({...response})
+    })
+    .catch(response => {
+      console.log('response',response);
+      setOrder({...response})
+    })
     setParking({...response});
-  }, [parking.parkings]);
+    setIsLoading(false);
+    
+  }, [parking.parkings, order.idOrder]);
 
   useEffect(() => {
     getdata();
@@ -46,16 +65,29 @@ export default HomeScreen = (props) => {
   };
   const canchelOrder = async () => {
     const index = findIndex(parking.parkings, 'name', currnetSlot.name); //this logic for find index slot for update data in data base
-    if (index > -1 || isSubmited) {
-      const response = await putHandle(
+    if (index > -1 || isSubmited  ) {
+      await putHandle(
         `/holon/parkings/${index}.json`,
         JSON.stringify({...currnetSlot, isFree: true}),
       );
+      await deleteHandle(`/orders/${order.idOrder}.json`)
       setCurrnetSlot({});
       setIsReserve(false);
       setModalVisible(false);
       setIsSubmited(false);
-    } else {
+      setOrder({})
+    }else if(order.idCostumer){
+      const index = findIndex(parking.parkings, 'name', order.nameSlot);
+      await putHandle(
+        `/holon/parkings/${index}.json`,
+        JSON.stringify({name: order.nameSlot, isFree: true}),
+      );
+      await deleteHandle(`/orders/${order.idOrder}.json`)
+      setOrder({})
+      setCurrnetSlot({});
+      setIsReserve(false);
+      setModalVisible(false);
+    }else {
       setIsSubmited(false);
       setCurrnetSlot({});
       setIsReserve(false);
@@ -63,7 +95,9 @@ export default HomeScreen = (props) => {
   };
 
   const renderPayment = () => {
-    if (isSubmited) {
+   if(order.idCostumer){
+     return <QR data={order} />
+   } else if (isSubmited) {
       return <QR data={currnetSlot} />;
     } else {
       return (
@@ -91,17 +125,34 @@ export default HomeScreen = (props) => {
     }
   };
   const submitOrder = async () => {
+    const {params} = props;
     const index = findIndex(parking.parkings, 'name', currnetSlot.name); //this logic for find index slot for update data in data base
     if (index > -1) {
-      const response = await putHandle(
+      await putHandle(
         `/holon/parkings/${index}.json`,
         JSON.stringify(currnetSlot),
       );
+      const resposne = await postHandle(
+        `/orders.json`,
+        JSON.stringify({
+          nameParking: parking.name,
+          nameSlot: currnetSlot.name,
+          idCostumer: params.id,
+          nameCostumer: params.name,
+        }),
+      );
       setIsSubmited(true);
+      setOrder({
+          idOrder: resposne.name,
+          nameParking: parking.name,
+          nameSlot: currnetSlot.name,
+          idCostumer: params.id,
+          nameCostumer: params.name,
+      })
     }
   };
   const handleOpenModal = () => {
-    if (isSubmited) {
+    if (isSubmited || order.idCostumer) {
       setModalVisible(true);
     } else {
       setCurrnetSlot({});
@@ -112,15 +163,16 @@ export default HomeScreen = (props) => {
   const handleCloseModal = () => {
     setModalVisible(false);
   };
-  const renderItem = ({item}) => (
+  const renderItem = ({item}) => {
+    return (
     <Card
       item={{...item}}
-      isReserve={isReserve}
+      isReserve={isReserve || order.idCostumer}
       canchelOrder={handleOpenModal}
       handleReserve={handleReserve}
-      isSelected={currnetSlot.name === item.name}
+      isSelected={currnetSlot.name === item.name || order.nameSlot === item.name}
     />
-  );
+  );}
   if (isLoading) {
     return (
       <View style={[styles.contianer, {justifyContent: 'center'}]}>
@@ -147,9 +199,7 @@ export default HomeScreen = (props) => {
         </SafeAreaView>
         <TitleWithBackground>Payments</TitleWithBackground>
         <View style={styles.payment}>
-          <CardWrapper>
-          {renderPayment()}
-          </CardWrapper>
+          <CardWrapper>{renderPayment()}</CardWrapper>
         </View>
       </View>
       <Modal
@@ -164,10 +214,11 @@ export default HomeScreen = (props) => {
 const styles = StyleSheet.create({
   contianer: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   parkingList: {
-    flex: 0.15,
+    flex: 0.16,
+    marginTop: 10,
   },
   body: {
     flex: 0.9,
@@ -178,7 +229,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   payment: {
-    flex: 0.35,
+    flex: 0.55,
     paddingHorizontal: 8,
+    justifyContent: 'center',
   },
 });

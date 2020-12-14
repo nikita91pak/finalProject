@@ -35,8 +35,7 @@ const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
     paddingHorizontal: 8,
-    marginTop: 50,
-
+    backgroundColor: 'white'
   }
 });
 

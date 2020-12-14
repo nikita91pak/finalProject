@@ -38,8 +38,8 @@ export const signout = async (typeSingout, cb) => {
   }
 };
 // Handle to method GET - for fecth data from data base firebase
-export const getHandle = async () => new Promise(async (resolve) => {
-  const response = await instance.get('/holon.json')
+export const getHandle = async (path='/holon.json') => new Promise(async (resolve) => {
+  const response = await instance.get(path)
   resolve(response.data)
 });
 
@@ -49,5 +49,38 @@ export const putHandle = (path, body) => new Promise(async (resolve) => {
     resolve(response.data)
   
 })
+
+// Handle to method POST - for add the a new data base in firebase
+export const postHandle = (path, body) => new Promise(async (resolve) => {
+  const response = await instance.post(path, body)
+  resolve(response.data)
+
+})
+
+// Handle to method DELETE - for Delete data from data base firebase
+export const deleteHandle = async (path) => new Promise(async (resolve) => {
+  const response = await instance.delete(path)
+  resolve(response.data)
+});
+
 // find index of item in arr - Generic Function. 
 export const findIndex = (arr, propety, value) => arr.findIndex(item => item[propety] === value)
+
+//check if costumer have order , this checking opertion happen in login
+export const handleExistOrders =  idCostumer => new Promise( async (reslove,reject) => {
+   const response = await instance.get('/orders.json')
+   if(response.data){
+     console.log('handleExistOrders', response.data);
+    const keys = Object.keys(response.data)
+    const order = keys.find(val => {
+      if(response.data[val].idCostumer === idCostumer){
+        console.log('order -->', val);
+        return val
+      }
+   })
+   reslove({idOrder:order,...response.data[order]})
+  } else {
+    reject({message: 'nothing'})
+  }
+   
+})

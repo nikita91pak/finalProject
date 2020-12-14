@@ -10,8 +10,15 @@ import { useNavigation } from '@react-navigation/native';
 const SingGroupBtn = ({isSingin, userInfoHandler, handleSignout, userInfo={}}) => {
     const navigation = useNavigation();
     const navigate = () => {
-        navigation.navigate('Home')
+        const {id, name, signWith, idOrder} = userInfo
+        navigation.navigate('Home',{
+            id,
+            name,
+            signWith,
+            idOrder
+        })
     }
+   
     const isUserSing = () => {
         if(isSingin)
         return (

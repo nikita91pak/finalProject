@@ -6,28 +6,30 @@ import SingGroupBtn from '../components/SigninGroupBtn/SingGroupBtn'
 import { dfltUsrImgUrl, dfltUsrname } from '../conts/consts'
 export default SignIn = (props) => {
   const [user, setUser] = useState({});
-
+  const [order, setOrder] = useState('');
   const userInfoHandler = (response, signWith) => {
-    const { name, id } = response
+    const { name, id,  order} = response
     const avatar = response.picture?.data?.url ? 
     response.picture.data.url :
-    response.photo
-    console.log('signinWith.facebook',signWith)
+    response.photo 
+    if(order) {
+      setOrder(order)
+    }
     setUser({
       name,
       id,
       avatar,
-      signWith
-    })
+      signWith,
+    }) 
   }
 
 const cleanUserInfo = () => {
   setUser({})
+  setOrder('')
 }
   
   const handleSignout = () => {
     const {signWith} = user
-    console.log('signWith',signWith)
     signout(signWith, cleanUserInfo)
  }
   const greeting = () => {
@@ -54,7 +56,7 @@ const cleanUserInfo = () => {
            handleSignout={handleSignout} 
            userInfoHandler={userInfoHandler} 
            isSingin={user.id ? true : false}
-           userInfo={user}
+           userInfo={{...user,idOrder: order}}
            />
            
       </View>
@@ -67,7 +69,8 @@ const styles = StyleSheet.create({
       flex: 1,
       paddingHorizontal: 10,
       paddingVertical: 8,
-      backgroundColor: 'white'
+      backgroundColor: 'white',
+      marginTop: 40
     
     },
     imageContainer: {

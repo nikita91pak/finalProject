@@ -7,7 +7,7 @@ import {
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
-
+import { handleExistOrders } from '../../utilitys/utilitys'
 const FacebookSDK = ({userInfoHandler}) => {
   const [userInfo, setUserInfo] = useState({});
 
@@ -24,7 +24,13 @@ const FacebookSDK = ({userInfoHandler}) => {
         if (error) {
           console.log('login info has error: ' + error);
         } else {
-          userInfoHandler(result, signinWith.facebook)
+          handleExistOrders(result.id).then(res => {
+            if(res){
+              userInfoHandler({...result, order: res}, signinWith.facebook)
+            }
+            
+          }).catch(err => userInfoHandler(result, signinWith.facebook))
+          
         }
       },
     );

@@ -22,6 +22,17 @@ const Card = ({item, isReserve, handleReserve, isSelected, canchelOrder}) => {
       );
     }
   };
+  const renderStatus = () => {
+    if(isSelected && !item.isFree){
+      return <TextRegular color={COLORS.gray} fontSize={16} textAlign="left">
+            You book a parking
+          </TextRegular>
+    } else if(!item.isFree) {
+      return <TextRegular color={COLORS.gray} fontSize={16} textAlign="left">
+      slot is busy
+    </TextRegular>
+    }
+  }
   return (
     <View
       style={[
@@ -30,16 +41,7 @@ const Card = ({item, isReserve, handleReserve, isSelected, canchelOrder}) => {
       ]}>
       <View style={{flex: 1}}>
         <TextRegular textAlign="left">slot {item.name}</TextRegular>
-        {!item.isFree && (
-          <TextRegular color={COLORS.gray} fontSize={16} textAlign="left">
-            Parking is busy
-          </TextRegular>
-        )}
-        {isSelected && (
-          <TextRegular color={COLORS.gray} fontSize={16} textAlign="left">
-            You book a parking
-          </TextRegular>
-        )}
+         {renderStatus()}
       </View>
       <View style={{flex: 1}}>{renderButton()}</View>
     </View>
