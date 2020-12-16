@@ -37,7 +37,7 @@ const Card = ({item, isReserve, handleReserve, isSelected, canchelOrder}) => {
     <View
       style={[
         styles.container,
-        {borderColor: isSelected || item.isFree ? COLORS.black : COLORS.red},
+        {borderColor: isSelected || item.isFree ? COLORS.blue : COLORS.red},
       ]}>
       <View style={{flex: 1}}>
         <TextRegular textAlign="left">slot {item.name}</TextRegular>
