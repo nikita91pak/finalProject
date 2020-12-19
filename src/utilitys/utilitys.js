@@ -67,13 +67,13 @@ export const deleteHandle = async (path) => new Promise(async (resolve) => {
 export const findIndex = (arr, propety, value) => arr.findIndex(item => item[propety] === value)
 
 //check if costumer have order , this checking opertion happen in login
-export const handleExistOrders =  idCostumer => new Promise( async (reslove,reject) => {
-   const response = await instance.get('/orders.json')
+export const handleExistOrders =  (idCostumer, name) => new Promise( async (reslove,reject) => {
+   const response = await instance.get(`/${name}/orders.json`)
    if(response.data){
      console.log('handleExistOrders', response.data);
     const keys = Object.keys(response.data)
     const order = keys.find(val => {
-      if(response.data[val].idCostumer === idCostumer){
+      if(response.data[val].idCostumer === idCostumer && name===response.data[val].nameParking){
         console.log('order -->', val);
         return val
       }

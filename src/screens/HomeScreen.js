@@ -25,9 +25,10 @@ import {COLORS} from '../conts/consts';
 import {OS} from '../utilitys/utilitys';
 import Modal from '../components/UI/Modal/Modal';
 import QR from '../components/QR/QR';
-
+import {useRoute} from '@react-navigation/native'
 export default HomeScreen = (props) => {
-  const [currnetParking, setCurrnetParking] = useState('holon');
+   const route = useRoute()
+  const [currnetParking, setCurrnetParking] = useState(route.params?.selected ? route.params.selected : 'holon');
   const [currnetSlot, setCurrnetSlot] = useState({}); // fetch parking from firebase database
   const [parking, setParking] = useState({}); // parking object
   const [isLoading, setIsLoading] = useState(false); // show indecator loading...
@@ -40,7 +41,7 @@ export default HomeScreen = (props) => {
 
   const getdata = useCallback(async () => {
     setIsLoading(true);
-    const response = await getHandle('/holon.json');
+    const response = await getHandle(`${currnetParking}.json`);
     handleExistOrders(props.params.id)
     .then(response =>{ 
       console.log('response resolve',response);
@@ -67,7 +68,7 @@ export default HomeScreen = (props) => {
     const index = findIndex(parking.parkings, 'name', currnetSlot.name); //this logic for find index slot for update data in data base
     if (index > -1 || isSubmited  ) {
       await putHandle(
-        `/holon/parkings/${index}.json`,
+        `/${currnetParking}/parkings/${index}.json`,
         JSON.stringify({...currnetSlot, isFree: true}),
       );
       await deleteHandle(`/orders/${order.idOrder}.json`)
@@ -79,7 +80,7 @@ export default HomeScreen = (props) => {
     }else if(order.idCostumer){
       const index = findIndex(parking.parkings, 'name', order.nameSlot);
       await putHandle(
-        `/holon/parkings/${index}.json`,
+        `/${currnetParking}/parkings/${index}.json`,
         JSON.stringify({name: order.nameSlot, isFree: true}),
       );
       await deleteHandle(`/orders/${order.idOrder}.json`)

@@ -12,8 +12,8 @@ const HomeScreenRoute = ({route}) => {
   const Tab = createBottomTabNavigator();
   return (
       <Tab.Navigator screenOptions={optionBottomTabHome}>
-        <Tab.Screen name="TabHome"  component={HomeScreen} />
         <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Screen name="TabHome"  component={HomeScreen} />
       </Tab.Navigator>
   );
 };
